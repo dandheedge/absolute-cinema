@@ -27,7 +27,7 @@ A modern movie search application built with Vue 3, TypeScript, and Vuetify.
 ## APIs Used
 
 - **HackerRank Movies API**: For movie search and pagination
-- **IMDb API**: For detailed movie information
+- **IMDb API (Unofficial)**: For detailed movie information
 
 ## Getting Started
 
@@ -175,7 +175,3 @@ vercel
 ## License
 
 MIT
-
-## Author
-
-Built with ❤️ for the frontend developer assessment
