@@ -12,8 +12,16 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./components/AppFooter.vue')['default']
+    AppNavigation: typeof import('./components/AppNavigation.vue')['default']
+    EmptyState: typeof import('./components/EmptyState.vue')['default']
+    ErrorState: typeof import('./components/ErrorState.vue')['default']
+    FilterPanel: typeof import('./components/FilterPanel.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    LoadingState: typeof import('./components/LoadingState.vue')['default']
+    MovieCard: typeof import('./components/MovieCard.vue')['default']
+    Pagination: typeof import('./components/Pagination.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SearchBar: typeof import('./components/SearchBar.vue')['default']
   }
 }
