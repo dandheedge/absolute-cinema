@@ -61,7 +61,7 @@
         <!-- Empty State -->
         <EmptyState
           v-if="!favoritesStore.hasFavorites"
-          icon="mdi-heart-outline"
+          image-src="/src/assets/empty-state.svg"
           :message="MESSAGES.NO_FAVORITES"
           title="No favorites yet"
         >
@@ -80,6 +80,7 @@
         <!-- No Results After Filtering -->
         <EmptyState
           v-else-if="filteredFavorites.length === 0"
+          image-src="/src/assets/no-results.svg"
           message="Try adjusting your filter settings"
           title="No favorites match your filters"
         />

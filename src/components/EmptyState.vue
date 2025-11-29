@@ -1,8 +1,12 @@
 <template>
   <div class="empty-state">
-    <v-icon class="empty-state__icon" color="grey" :size="iconSize">
-      {{ icon }}
-    </v-icon>
+    <v-img
+      :src="imageSrc"
+      :width="imageSize"
+      :height="imageSize"
+      class="empty-state__image"
+      alt="Empty state illustration"
+    />
 
     <h3 class="empty-state__title">{{ title }}</h3>
 
@@ -16,15 +20,15 @@
   interface Props {
     title?: string
     message?: string
-    icon?: string
-    iconSize?: number
+    imageSrc?: string
+    imageSize?: number
   }
 
   withDefaults(defineProps<Props>(), {
     title: 'No results found',
     message: 'Try adjusting your search or filters',
-    icon: 'mdi-movie-open-outline',
-    iconSize: 64,
+    imageSrc: '',
+    imageSize: 128,
   })
 </script>
 
@@ -39,8 +43,8 @@
   min-height: 300px;
   text-align: center;
 
-  &__icon {
-    opacity: 0.5;
+  &__image {
+    opacity: 0.7;
   }
 
   &__title {

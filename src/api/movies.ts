@@ -1,12 +1,13 @@
 /**
  * Movies API Service
- * Handles HackerRank Movies API requests
+ * Handles HackerRank Movies API requests with Zod validation
  */
 
 import type { MoviesApiResponse } from './types'
 import { HTTPError } from 'ky'
 import { moviesApiClient } from './client'
-import { ApiError, isMoviesApiResponse } from './types'
+import { ApiError } from './types'
+import { MoviesApiResponseSchema, parseWithSchema } from './schemas'
 
 export interface SearchMoviesParams {
   title: string
@@ -32,12 +33,12 @@ export async function searchMovies (
       .get(`movies/search?${searchParams.toString()}`)
       .json()
 
-    // Validate response structure
-    if (!isMoviesApiResponse(response)) {
-      throw new ApiError('Invalid API response format')
-    }
-
-    return response
+    // Validate response with Zod
+    return parseWithSchema(
+      MoviesApiResponseSchema,
+      response,
+      'Invalid API response format from HackerRank Movies API',
+    )
   } catch (error) {
     if (error instanceof HTTPError) {
       const statusCode = error.response.status
@@ -54,7 +55,8 @@ export async function searchMovies (
       throw new ApiError(message, statusCode, error.response)
     }
 
-    if (error instanceof ApiError) {
+    // Re-throw API errors (including validation errors)
+    if (error instanceof ApiError || error instanceof Error) {
       throw error
     }
 

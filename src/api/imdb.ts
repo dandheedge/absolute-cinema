@@ -1,12 +1,13 @@
 /**
  * IMDb API Service
- * Handles IMDb API requests for detailed movie information
+ * Handles IMDb API requests for detailed movie information with Zod validation
  */
 
 import type { ImdbMovie } from './types'
 import { HTTPError } from 'ky'
 import { imdbApiClient } from './client'
-import { ApiError, isImdbMovie } from './types'
+import { ApiError } from './types'
+import { ImdbMovieSchema, parseWithSchema } from './schemas'
 
 /**
  * Get detailed movie information by IMDb ID
@@ -37,12 +38,12 @@ export async function getMovieDetails (imdbId: string): Promise<ImdbMovie> {
       )
     }
 
-    // Validate response structure
-    if (!isImdbMovie(response)) {
-      throw new ApiError('Invalid movie data received')
-    }
-
-    return response
+    // Validate response with Zod
+    return parseWithSchema(
+      ImdbMovieSchema,
+      response,
+      'Invalid movie data received from IMDb API',
+    )
   } catch (error) {
     if (error instanceof HTTPError) {
       const statusCode = error.response.status
@@ -59,7 +60,8 @@ export async function getMovieDetails (imdbId: string): Promise<ImdbMovie> {
       throw new ApiError(message, statusCode, error.response)
     }
 
-    if (error instanceof ApiError) {
+    // Re-throw validation or API errors
+    if (error instanceof ApiError || error instanceof Error) {
       throw error
     }
 
@@ -79,7 +81,8 @@ export async function getMultipleMovieDetails (
   const requests = imdbIds.map(async id => {
     try {
       return await getMovieDetails(id)
-    } catch {
+    } catch (error) {
+      console.warn(`Failed to fetch details for ${id}:`, error)
       return null
     }
   })

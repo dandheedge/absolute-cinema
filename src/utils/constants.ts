@@ -62,4 +62,4 @@ export const MESSAGES = {
 } as const
 
 // Images
-export const PLACEHOLDER_IMAGE = 'https://placehold.co/300x450'
+export const PLACEHOLDER_IMAGE = 'https://placehold.co/300x400'

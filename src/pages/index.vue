@@ -68,6 +68,7 @@
           v-else-if="displayedMovies.length === 0 && !initialLoad"
           :message="searchQuery ? MESSAGES.NO_RESULTS : 'Enter a search term to find movies'"
           :title="searchQuery ? 'No movies found' : 'Start searching'"
+          image-src="/src/assets/no-results.svg"
         />
 
         <!-- Movie Grid -->
@@ -81,7 +82,7 @@
             sm="6"
             xl="3"
           >
-            <MovieCard :movie="movie" />
+            <MovieCard :movie="movie" :image-url="movie.imageUrl" />
           </v-col>
         </v-row>
 

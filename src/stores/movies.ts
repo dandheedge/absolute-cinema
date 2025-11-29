@@ -7,6 +7,7 @@ import type { MoviesApiResponse, MovieSearchResult } from '@/api/types'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { getAllMovies, searchMovies } from '@/api/movies'
+import { getMultipleMovieDetails } from '@/api/imdb'
 import { ApiError } from '@/api/types'
 import { sanitizeInput } from '@/utils/validators'
 
@@ -41,7 +42,16 @@ export const useMoviesStore = defineStore('movies', () => {
           })
         : getAllMovies(page))
 
-      movies.value = response.data
+      // Fetch IMDb images for all movies in parallel
+      const imdbIds = response.data.map(movie => movie.imdbID)
+      const imdbDetails = await getMultipleMovieDetails(imdbIds)
+      
+      // Merge image URLs with movie data
+      movies.value = response.data.map((movie, index) => ({
+        ...movie,
+        imageUrl: imdbDetails[index]?.primaryImage?.url || undefined,
+      }))
+
       currentPage.value = response.page
       totalPages.value = response.total_pages
       totalResults.value = response.total
