@@ -4,6 +4,15 @@
  * Configures SASS variables and Vuetify overwrites
  */
 
+// Use Rubik font throughout the application
+.v-application {
+  font-family: 'Rubik', sans-serif !important;
+}
+
+* {
+  font-family: 'Rubik', sans-serif !important;
+}
+
 // https://vuetifyjs.com/features/sass-variables/`
 // @use 'vuetify/settings' with (
 //   $color-pack: false

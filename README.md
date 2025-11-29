@@ -33,7 +33,7 @@ A modern movie search application built with Vue 3, TypeScript, and Vuetify.
 
 ### Prerequisites
 
-- Node.js 24.x (LTS Krypton) or higher
+- Node.js 22.x or higher
 - Bun (recommended) or npm/yarn
 
 ### Installation

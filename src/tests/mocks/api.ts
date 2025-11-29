@@ -38,8 +38,15 @@ export const mockImdbMovie: ImdbMovie = {
   runtimeMinutes: 136,
   runtimeStr: '2h 16min',
   plot: 'A computer hacker learns about the true nature of reality.',
-  directors: 'Lana Wachowski, Lilly Wachowski',
-  stars: 'Keanu Reeves, Laurence Fishburne, Carrie-Anne Moss',
+  directors: [
+    { id: 'nm0905152', name: 'Lana Wachowski' },
+    { id: 'nm0905154', name: 'Lilly Wachowski' },
+  ],
+  stars: [
+    { id: 'nm0000206', name: 'Keanu Reeves' },
+    { id: 'nm0000401', name: 'Laurence Fishburne' },
+    { id: 'nm0000194', name: 'Carrie-Anne Moss' },
+  ],
   genres: 'Action, Sci-Fi',
   genreList: [
     { key: 'action', value: 'Action' },

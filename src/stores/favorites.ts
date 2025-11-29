@@ -9,7 +9,7 @@ import { defineStore } from 'pinia'
 import { computed } from 'vue'
 import { STORAGE_KEYS } from '@/utils/constants'
 
-type ExtraMovieField = string | number | boolean | null
+type ExtraMovieField = string | number | boolean | null | undefined
 export interface FavoriteMovie extends MovieSearchResult {
   [key: string]: ExtraMovieField
   addedAt: number

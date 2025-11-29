@@ -114,17 +114,17 @@
             <!-- Credits -->
             <div class="movie-detail__credits mt-6">
               <v-row>
-                <v-col v-if="movie.directors" cols="12" sm="6">
+                <v-col v-if="formattedDirectors" cols="12" sm="6">
                   <h3 class="text-subtitle-1 font-weight-bold mb-2">Director</h3>
-                  <p class="text-body-2">{{ movie.directors }}</p>
+                  <p class="text-body-2">{{ formattedDirectors }}</p>
                 </v-col>
-                <v-col v-if="movie.writers" cols="12" sm="6">
+                <v-col v-if="formattedWriters" cols="12" sm="6">
                   <h3 class="text-subtitle-1 font-weight-bold mb-2">Writers</h3>
-                  <p class="text-body-2">{{ movie.writers }}</p>
+                  <p class="text-body-2">{{ formattedWriters }}</p>
                 </v-col>
-                <v-col v-if="movie.stars" cols="12">
+                <v-col v-if="formattedStars" cols="12">
                   <h3 class="text-subtitle-1 font-weight-bold mb-2">Stars</h3>
-                  <p class="text-body-2">{{ movie.stars }}</p>
+                  <p class="text-body-2">{{ formattedStars }}</p>
                 </v-col>
               </v-row>
             </div>
@@ -150,12 +150,6 @@
                   <div class="info-item">
                     <span class="info-item__label">Release Date</span>
                     <span class="info-item__value">{{ formatDate(movie.releaseDate) }}</span>
-                  </div>
-                </v-col>
-                <v-col v-if="movie.boxOffice?.grossUSA" cols="12" md="4" sm="6">
-                  <div class="info-item">
-                    <span class="info-item__label">Box Office (USA)</span>
-                    <span class="info-item__value">{{ movie.boxOffice.grossUSA }}</span>
                   </div>
                 </v-col>
                 <v-col v-if="movie.awards" cols="12">
@@ -188,7 +182,31 @@
   const movie = computed(() => movieDetailsStore.currentMovie)
 
   const moviePoster = computed(() => {
-    return movie.value?.image || PLACEHOLDER_IMAGE
+    return movie.value?.primaryImage?.url || PLACEHOLDER_IMAGE
+  })
+
+  const formattedDirectors = computed(() => {
+    if (!movie.value?.directors || movie.value.directors.length === 0) return ''
+    return movie.value.directors
+      .map(d => d.displayName || d.name || '')
+      .filter(Boolean)
+      .join(', ')
+  })
+
+  const formattedWriters = computed(() => {
+    if (!movie.value?.writers || movie.value.writers.length === 0) return ''
+    return movie.value.writers
+      .map(w => w.displayName || w.name || '')
+      .filter(Boolean)
+      .join(', ')
+  })
+
+  const formattedStars = computed(() => {
+    if (!movie.value?.stars || movie.value.stars.length === 0) return ''
+    return movie.value.stars
+      .map(s => s.displayName || s.name || '')
+      .filter(Boolean)
+      .join(', ')
   })
 
   const isFavorite = computed(() => {
@@ -217,8 +235,10 @@
 
     // Create a MovieSearchResult object for the favorites store
     const movieData = {
-      Title: movie.value.title,
-      Year: Number.parseInt(movie.value.year) || 0,
+      Title: movie.value.title || '',
+      Year: typeof movie.value.year === 'number' 
+        ? movie.value.year 
+        : Number.parseInt(movie.value.year || '0') || 0,
       imdbID: movie.value.id,
     }
 
