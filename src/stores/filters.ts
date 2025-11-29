@@ -3,11 +3,11 @@
  * Manages search filters and sorting options
  */
 
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import { FILTERS } from '@/utils/constants'
-import type { MovieSearchResult } from '@/api/types'
 import type { FavoriteMovie } from './favorites'
+import type { MovieSearchResult } from '@/api/types'
+import { defineStore } from 'pinia'
+import { computed, ref } from 'vue'
+import { FILTERS } from '@/utils/constants'
 
 export type SortOption = 'title-asc' | 'title-desc' | 'year-asc' | 'year-desc'
 
@@ -19,68 +19,73 @@ export const useFiltersStore = defineStore('filters', () => {
 
   // Computed
   const hasActiveFilters = computed(() => {
-    const isYearFiltered =
-      yearRange.value[0] !== FILTERS.MIN_YEAR ||
-      yearRange.value[1] !== FILTERS.MAX_YEAR
+    const isYearFiltered
+      = yearRange.value[0] !== FILTERS.MIN_YEAR
+        || yearRange.value[1] !== FILTERS.MAX_YEAR
     const isSortChanged = sortBy.value !== FILTERS.DEFAULT_SORT
     return isYearFiltered || isSortChanged
   })
 
   // Actions
-  function setSortBy(sort: SortOption) {
+  function setSortBy (sort: SortOption) {
     sortBy.value = sort
   }
 
-  function setYearRange(min: number, max: number) {
+  function setYearRange (min: number, max: number) {
     yearRange.value = [
       Math.max(FILTERS.MIN_YEAR, min),
       Math.min(FILTERS.MAX_YEAR, max),
     ]
   }
 
-  function clearFilters() {
+  function clearFilters () {
     sortBy.value = FILTERS.DEFAULT_SORT as SortOption
     yearRange.value = [FILTERS.MIN_YEAR, FILTERS.MAX_YEAR]
   }
 
-  function applyFilters<T extends MovieSearchResult | FavoriteMovie>(
+  function applyFilters<T extends MovieSearchResult | FavoriteMovie> (
     movies: T[],
   ): T[] {
     let filtered = [...movies]
 
     // Filter by year range
     filtered = filtered.filter(
-      (movie) =>
+      movie =>
         movie.Year >= yearRange.value[0] && movie.Year <= yearRange.value[1],
     )
 
     // Sort
     filtered.sort((a, b) => {
       switch (sortBy.value) {
-        case 'title-asc':
+        case 'title-asc': {
           return a.Title.localeCompare(b.Title)
-        case 'title-desc':
+        }
+        case 'title-desc': {
           return b.Title.localeCompare(a.Title)
-        case 'year-asc':
+        }
+        case 'year-asc': {
           return a.Year - b.Year
-        case 'year-desc':
+        }
+        case 'year-desc': {
           return b.Year - a.Year
-        default:
+        }
+        default: {
           return 0
+        }
       }
     })
 
     return filtered
   }
 
-  function getYearRangeFromMovies(
+  function getYearRangeFromMovies (
     movies: (MovieSearchResult | FavoriteMovie)[],
   ): [number, number] {
     if (movies.length === 0) {
       return [FILTERS.MIN_YEAR, FILTERS.MAX_YEAR]
     }
 
-    const years = movies.map((m) => m.Year)
+    const years = movies.map(m => m.Year)
     return [Math.min(...years), Math.max(...years)]
   }
 
@@ -101,4 +106,3 @@ export const useFiltersStore = defineStore('filters', () => {
     getYearRangeFromMovies,
   }
 })
-

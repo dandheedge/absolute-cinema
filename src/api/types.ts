@@ -40,20 +40,20 @@ export interface ImdbMovie {
   plotLocalIsRtl?: boolean
   awards?: string
   directors?: string
-  directorList?: Array<{ id: string; name: string }>
+  directorList?: Array<{ id: string, name: string }>
   writers?: string
-  writerList?: Array<{ id: string; name: string }>
+  writerList?: Array<{ id: string, name: string }>
   stars?: string
-  starList?: Array<{ id: string; name: string }>
-  actorList?: Array<{ id: string; name: string; asCharacter?: string }>
+  starList?: Array<{ id: string, name: string }>
+  actorList?: Array<{ id: string, name: string, asCharacter?: string }>
   genres?: string
-  genreList?: Array<{ key: string; value: string }>
+  genreList?: Array<{ key: string, value: string }>
   companies?: string
-  companyList?: Array<{ id: string; name: string }>
+  companyList?: Array<{ id: string, name: string }>
   countries?: string
-  countryList?: Array<{ key: string; value: string }>
+  countryList?: Array<{ key: string, value: string }>
   languages?: string
-  languageList?: Array<{ key: string; value: string }>
+  languageList?: Array<{ key: string, value: string }>
   contentRating?: string
   imDbRating?: string
   imDbRatingVotes?: string
@@ -145,7 +145,7 @@ export interface ImdbMovie {
 
 // API Error Types
 export class ApiError extends Error {
-  constructor(
+  constructor (
     message: string,
     public statusCode?: number,
     public response?: unknown,
@@ -156,25 +156,24 @@ export class ApiError extends Error {
 }
 
 // Type guards
-export function isMoviesApiResponse(data: unknown): data is MoviesApiResponse {
+export function isMoviesApiResponse (data: unknown): data is MoviesApiResponse {
   return (
-    typeof data === 'object' &&
-    data !== null &&
-    'page' in data &&
-    'per_page' in data &&
-    'total' in data &&
-    'total_pages' in data &&
-    'data' in data &&
-    Array.isArray((data as MoviesApiResponse).data)
+    typeof data === 'object'
+    && data !== null
+    && 'page' in data
+    && 'per_page' in data
+    && 'total' in data
+    && 'total_pages' in data
+    && 'data' in data
+    && Array.isArray((data as MoviesApiResponse).data)
   )
 }
 
-export function isImdbMovie(data: unknown): data is ImdbMovie {
+export function isImdbMovie (data: unknown): data is ImdbMovie {
   return (
-    typeof data === 'object' &&
-    data !== null &&
-    'id' in data &&
-    'title' in data
+    typeof data === 'object'
+    && data !== null
+    && 'id' in data
+    && 'title' in data
   )
 }
-

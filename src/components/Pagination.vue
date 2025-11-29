@@ -7,54 +7,53 @@
     </div>
 
     <v-pagination
-      :model-value="currentPage"
-      :length="totalPages"
-      :total-visible="maxVisiblePages"
       :disabled="disabled"
+      :length="totalPages"
+      :model-value="currentPage"
+      :total-visible="maxVisiblePages"
       @update:model-value="handlePageChange"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { PAGINATION } from '@/utils/constants'
+  import { computed } from 'vue'
+  import { PAGINATION } from '@/utils/constants'
 
-interface Props {
-  currentPage: number
-  totalPages: number
-  totalResults: number
-  perPage?: number
-  disabled?: boolean
-}
+  interface Props {
+    currentPage: number
+    totalPages: number
+    totalResults: number
+    perPage?: number
+    disabled?: boolean
+  }
 
-interface Emits {
-  (e: 'update:currentPage', page: number): void
-  (e: 'change', page: number): void
-}
+  interface Emits {
+    (e: 'update:currentPage' | 'change', page: number): void
+  }
 
-const props = withDefaults(defineProps<Props>(), {
-  perPage: PAGINATION.ITEMS_PER_PAGE,
-  disabled: false,
-})
+  const props = withDefaults(defineProps<Props>(), {
+    perPage: PAGINATION.ITEMS_PER_PAGE,
+    disabled: false,
+  })
 
-const emit = defineEmits<Emits>()
+  const emit = defineEmits<Emits>()
 
-const maxVisiblePages = PAGINATION.MAX_VISIBLE_PAGES
+  const maxVisiblePages = PAGINATION.MAX_VISIBLE_PAGES
 
-const startItem = computed(() => {
-  return (props.currentPage - 1) * props.perPage + 1
-})
+  const startItem = computed(() => {
+    return (props.currentPage - 1) * props.perPage + 1
+  })
 
-const endItem = computed(() => {
-  const end = props.currentPage * props.perPage
-  return Math.min(end, props.totalResults)
-})
+  const endItem = computed(() => {
+    const end = props.currentPage * props.perPage
+    return Math.min(end, props.totalResults)
+  })
 
-function handlePageChange(page: number) {
-  emit('update:currentPage', page)
-  emit('change', page)
-}
+  function handlePageChange (page: number) {
+    emit('update:currentPage', page)
+    emit('change', page)
+  }
 </script>
 
 <style scoped lang="scss">
@@ -70,4 +69,3 @@ function handlePageChange(page: number) {
   }
 }
 </style>
-

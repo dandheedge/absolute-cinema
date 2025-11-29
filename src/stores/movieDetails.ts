@@ -3,9 +3,9 @@
  * Manages detailed movie information from IMDb API
  */
 
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
 import type { ImdbMovie } from '@/api/types'
+import { defineStore } from 'pinia'
+import { computed, ref } from 'vue'
 import { getMovieDetails } from '@/api/imdb'
 import { ApiError } from '@/api/types'
 
@@ -21,7 +21,7 @@ export const useMovieDetailsStore = defineStore('movieDetails', () => {
   const hasError = computed(() => error.value !== null)
 
   // Actions
-  async function fetchMovieDetails(imdbId: string, forceRefresh = false) {
+  async function fetchMovieDetails (imdbId: string, forceRefresh = false) {
     // Return cached data if available and not forcing refresh
     if (!forceRefresh && movieDetails.value.has(imdbId)) {
       currentMovie.value = movieDetails.value.get(imdbId)!
@@ -33,39 +33,35 @@ export const useMovieDetailsStore = defineStore('movieDetails', () => {
 
     try {
       const details = await getMovieDetails(imdbId)
-      
+
       // Cache the result
       movieDetails.value.set(imdbId, details)
       currentMovie.value = details
 
       return details
-    } catch (err) {
-      if (err instanceof ApiError) {
-        error.value = err.message
-      } else {
-        error.value = 'Failed to load movie details'
-      }
+    } catch (error_) {
+      error.value = error_ instanceof ApiError ? error_.message : 'Failed to load movie details'
       currentMovie.value = null
-      throw err
+      throw error_
     } finally {
       loading.value = false
     }
   }
 
-  function getMovieFromCache(imdbId: string): ImdbMovie | undefined {
+  function getMovieFromCache (imdbId: string): ImdbMovie | undefined {
     return movieDetails.value.get(imdbId)
   }
 
-  function clearCurrentMovie() {
+  function clearCurrentMovie () {
     currentMovie.value = null
     error.value = null
   }
 
-  function clearError() {
+  function clearError () {
     error.value = null
   }
 
-  function clearCache() {
+  function clearCache () {
     movieDetails.value.clear()
   }
 
@@ -87,4 +83,3 @@ export const useMovieDetailsStore = defineStore('movieDetails', () => {
     clearCache,
   }
 })
-

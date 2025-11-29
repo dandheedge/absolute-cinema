@@ -3,7 +3,7 @@
  * Mock data for testing
  */
 
-import type { MoviesApiResponse, ImdbMovie } from '@/api/types'
+import type { ImdbMovie, MoviesApiResponse } from '@/api/types'
 
 export const mockMoviesApiResponse: MoviesApiResponse = {
   page: 1,
@@ -56,4 +56,3 @@ export const mockMovieSearchResult = {
   Year: 2010,
   imdbID: 'tt1375666',
 }
-

@@ -2,12 +2,12 @@
   <div class="favorites-page">
     <v-row>
       <!-- Filters Sidebar -->
-      <v-col cols="12" md="3" lg="2" class="d-none d-md-block">
+      <v-col class="d-none d-md-block" cols="12" lg="2" md="3">
         <FilterPanel />
       </v-col>
 
       <!-- Main Content -->
-      <v-col cols="12" md="9" lg="10">
+      <v-col cols="12" lg="10" md="9">
         <!-- Header -->
         <div class="favorites-page__header">
           <h1 class="text-h4 mb-2">
@@ -23,16 +23,16 @@
         <div class="d-md-none mt-4">
           <v-btn
             block
-            variant="outlined"
             prepend-icon="mdi-filter-variant"
+            variant="outlined"
             @click="filterDrawer = true"
           >
             Filters
             <v-chip
               v-if="filtersStore.hasActiveFilters"
-              size="small"
-              color="primary"
               class="ml-2"
+              color="primary"
+              size="small"
             >
               Active
             </v-chip>
@@ -49,9 +49,9 @@
         <!-- Clear All Button -->
         <div v-if="favoritesStore.hasFavorites" class="favorites-page__actions">
           <v-btn
-            variant="outlined"
             color="error"
             prepend-icon="mdi-delete-outline"
+            variant="outlined"
             @click="showClearDialog = true"
           >
             Clear All Favorites
@@ -61,16 +61,16 @@
         <!-- Empty State -->
         <EmptyState
           v-if="!favoritesStore.hasFavorites"
-          title="No favorites yet"
-          :message="MESSAGES.NO_FAVORITES"
           icon="mdi-heart-outline"
+          :message="MESSAGES.NO_FAVORITES"
+          title="No favorites yet"
         >
           <template #action>
             <v-btn
               color="primary"
-              variant="elevated"
-              to="/"
               prepend-icon="mdi-magnify"
+              to="/"
+              variant="elevated"
             >
               Discover Movies
             </v-btn>
@@ -80,8 +80,8 @@
         <!-- No Results After Filtering -->
         <EmptyState
           v-else-if="filteredFavorites.length === 0"
-          title="No favorites match your filters"
           message="Try adjusting your filter settings"
+          title="No favorites match your filters"
         />
 
         <!-- Favorites Grid -->
@@ -90,9 +90,9 @@
             v-for="movie in filteredFavorites"
             :key="movie.imdbID"
             cols="12"
-            sm="6"
-            md="6"
             lg="4"
+            md="6"
+            sm="6"
             xl="3"
           >
             <MovieCard :movie="movie" />
@@ -140,25 +140,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useFavoritesStore } from '@/stores/favorites'
-import { useFiltersStore } from '@/stores/filters'
-import { MESSAGES } from '@/utils/constants'
+  import { computed, ref } from 'vue'
+  import { useFavoritesStore } from '@/stores/favorites'
+  import { useFiltersStore } from '@/stores/filters'
+  import { MESSAGES } from '@/utils/constants'
 
-const favoritesStore = useFavoritesStore()
-const filtersStore = useFiltersStore()
+  const favoritesStore = useFavoritesStore()
+  const filtersStore = useFiltersStore()
 
-const filterDrawer = ref(false)
-const showClearDialog = ref(false)
+  const filterDrawer = ref(false)
+  const showClearDialog = ref(false)
 
-const filteredFavorites = computed(() => {
-  return filtersStore.applyFilters(favoritesStore.favorites)
-})
+  const filteredFavorites = computed(() => {
+    return filtersStore.applyFilters(favoritesStore.favorites)
+  })
 
-function handleClearAll() {
-  favoritesStore.clearFavorites()
-  showClearDialog.value = false
-}
+  function handleClearAll () {
+    favoritesStore.clearFavorites()
+    showClearDialog.value = false
+  }
 </script>
 
 <style scoped lang="scss">
@@ -177,4 +177,3 @@ function handleClearAll() {
   }
 }
 </style>
-

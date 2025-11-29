@@ -4,9 +4,9 @@
       <span>Filters</span>
       <v-btn
         v-if="hasActiveFilters"
+        color="primary"
         size="small"
         variant="text"
-        color="primary"
         @click="handleClearFilters"
       >
         Clear All
@@ -20,11 +20,11 @@
       <div class="filter-section">
         <h4 class="filter-section__title">Sort By</h4>
         <v-select
-          :model-value="sortBy"
-          :items="sortOptions"
           density="compact"
-          variant="outlined"
           hide-details
+          :items="sortOptions"
+          :model-value="sortBy"
+          variant="outlined"
           @update:model-value="handleSortChange"
         />
       </div>
@@ -38,12 +38,12 @@
             <span class="text-caption">{{ yearRange[1] }}</span>
           </div>
           <v-range-slider
-            :model-value="yearRange"
-            :min="minYear"
-            :max="maxYear"
-            :step="1"
-            hide-details
             color="primary"
+            hide-details
+            :max="maxYear"
+            :min="minYear"
+            :model-value="yearRange"
+            :step="1"
             @update:model-value="handleYearRangeChange"
           />
         </div>
@@ -53,40 +53,40 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useFiltersStore } from '@/stores/filters'
-import type { SortOption } from '@/stores/filters'
-import { SORT_OPTIONS, FILTERS } from '@/utils/constants'
+  import type { SortOption } from '@/stores/filters'
+  import { computed } from 'vue'
+  import { useFiltersStore } from '@/stores/filters'
+  import { FILTERS, SORT_OPTIONS } from '@/utils/constants'
 
-const filtersStore = useFiltersStore()
+  const filtersStore = useFiltersStore()
 
-const sortBy = computed(() => filtersStore.sortBy)
-const yearRange = computed(() => filtersStore.yearRange)
-const hasActiveFilters = computed(() => filtersStore.hasActiveFilters)
+  const sortBy = computed(() => filtersStore.sortBy)
+  const yearRange = computed(() => filtersStore.yearRange)
+  const hasActiveFilters = computed(() => filtersStore.hasActiveFilters)
 
-const sortOptions = SORT_OPTIONS.map((option) => ({
-  title: option.label,
-  value: option.value,
-}))
+  const sortOptions = SORT_OPTIONS.map(option => ({
+    title: option.label,
+    value: option.value,
+  }))
 
-const minYear = FILTERS.MIN_YEAR
-const maxYear = FILTERS.MAX_YEAR
+  const minYear = FILTERS.MIN_YEAR
+  const maxYear = FILTERS.MAX_YEAR
 
-function handleSortChange(value: SortOption) {
-  filtersStore.setSortBy(value)
-}
-
-function handleYearRangeChange(value: number[] | number) {
-  if (Array.isArray(value) && value.length === 2) {
-    const min = value[0] ?? FILTERS.MIN_YEAR
-    const max = value[1] ?? FILTERS.MAX_YEAR
-    filtersStore.setYearRange(min, max)
+  function handleSortChange (value: SortOption) {
+    filtersStore.setSortBy(value)
   }
-}
 
-function handleClearFilters() {
-  filtersStore.clearFilters()
-}
+  function handleYearRangeChange (value: number[] | number) {
+    if (Array.isArray(value) && value.length === 2) {
+      const min = value[0] ?? FILTERS.MIN_YEAR
+      const max = value[1] ?? FILTERS.MAX_YEAR
+      filtersStore.setYearRange(min, max)
+    }
+  }
+
+  function handleClearFilters () {
+    filtersStore.clearFilters()
+  }
 </script>
 
 <style scoped lang="scss">
@@ -118,4 +118,3 @@ function handleClearFilters() {
   }
 }
 </style>
-

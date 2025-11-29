@@ -3,10 +3,10 @@
  * Manages movie search results, pagination, and loading states
  */
 
+import type { MoviesApiResponse, MovieSearchResult } from '@/api/types'
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import type { MovieSearchResult, MoviesApiResponse } from '@/api/types'
-import { searchMovies, getAllMovies } from '@/api/movies'
+import { computed, ref } from 'vue'
+import { getAllMovies, searchMovies } from '@/api/movies'
 import { ApiError } from '@/api/types'
 import { sanitizeInput } from '@/utils/validators'
 
@@ -28,22 +28,18 @@ export const useMoviesStore = defineStore('movies', () => {
   const hasPreviousPage = computed(() => currentPage.value > 1)
 
   // Actions
-  async function fetchMovies(query: string, page = 1) {
+  async function fetchMovies (query: string, page = 1) {
     loading.value = true
     error.value = null
 
     try {
       const sanitizedQuery = sanitizeInput(query)
-      let response: MoviesApiResponse
-
-      if (sanitizedQuery) {
-        response = await searchMovies({
-          title: sanitizedQuery,
-          page,
-        })
-      } else {
-        response = await getAllMovies(page)
-      }
+      const response: MoviesApiResponse = await (sanitizedQuery
+        ? searchMovies({
+            title: sanitizedQuery,
+            page,
+          })
+        : getAllMovies(page))
 
       movies.value = response.data
       currentPage.value = response.page
@@ -51,12 +47,8 @@ export const useMoviesStore = defineStore('movies', () => {
       totalResults.value = response.total
       perPage.value = response.per_page
       searchQuery.value = sanitizedQuery
-    } catch (err) {
-      if (err instanceof ApiError) {
-        error.value = err.message
-      } else {
-        error.value = 'An unexpected error occurred'
-      }
+    } catch (error_) {
+      error.value = error_ instanceof ApiError ? error_.message : 'An unexpected error occurred'
       movies.value = []
       totalPages.value = 0
       totalResults.value = 0
@@ -65,33 +57,35 @@ export const useMoviesStore = defineStore('movies', () => {
     }
   }
 
-  async function searchMoviesByTitle(query: string) {
+  async function searchMoviesByTitle (query: string) {
     currentPage.value = 1
     await fetchMovies(query, 1)
   }
 
-  async function goToPage(page: number) {
-    if (page < 1 || page > totalPages.value) return
+  async function goToPage (page: number) {
+    if (page < 1 || page > totalPages.value) {
+      return
+    }
     await fetchMovies(searchQuery.value, page)
   }
 
-  async function nextPage() {
+  async function nextPage () {
     if (hasNextPage.value) {
       await goToPage(currentPage.value + 1)
     }
   }
 
-  async function previousPage() {
+  async function previousPage () {
     if (hasPreviousPage.value) {
       await goToPage(currentPage.value - 1)
     }
   }
 
-  function clearError() {
+  function clearError () {
     error.value = null
   }
 
-  function reset() {
+  function reset () {
     movies.value = []
     currentPage.value = 1
     totalPages.value = 0
@@ -128,4 +122,3 @@ export const useMoviesStore = defineStore('movies', () => {
     reset,
   }
 })
-

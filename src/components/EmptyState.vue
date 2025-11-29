@@ -1,6 +1,6 @@
 <template>
   <div class="empty-state">
-    <v-icon :size="iconSize" color="grey" class="empty-state__icon">
+    <v-icon class="empty-state__icon" color="grey" :size="iconSize">
       {{ icon }}
     </v-icon>
 
@@ -13,19 +13,19 @@
 </template>
 
 <script setup lang="ts">
-interface Props {
-  title?: string
-  message?: string
-  icon?: string
-  iconSize?: number
-}
+  interface Props {
+    title?: string
+    message?: string
+    icon?: string
+    iconSize?: number
+  }
 
-withDefaults(defineProps<Props>(), {
-  title: 'No results found',
-  message: 'Try adjusting your search or filters',
-  icon: 'mdi-movie-open-outline',
-  iconSize: 64,
-})
+  withDefaults(defineProps<Props>(), {
+    title: 'No results found',
+    message: 'Try adjusting your search or filters',
+    icon: 'mdi-movie-open-outline',
+    iconSize: 64,
+  })
 </script>
 
 <style scoped lang="scss">
@@ -56,4 +56,3 @@ withDefaults(defineProps<Props>(), {
   }
 }
 </style>
-

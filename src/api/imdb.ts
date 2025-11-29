@@ -3,9 +3,9 @@
  * Handles IMDb API requests for detailed movie information
  */
 
+import type { ImdbMovie } from './types'
 import { HTTPError } from 'ky'
 import { imdbApiClient } from './client'
-import type { ImdbMovie } from './types'
 import { ApiError, isImdbMovie } from './types'
 
 /**
@@ -14,7 +14,7 @@ import { ApiError, isImdbMovie } from './types'
  * @returns Promise with detailed movie information
  * @throws ApiError if request fails or response is invalid
  */
-export async function getMovieDetails(imdbId: string): Promise<ImdbMovie> {
+export async function getMovieDetails (imdbId: string): Promise<ImdbMovie> {
   try {
     // Validate imdbId format
     if (!imdbId || !imdbId.startsWith('tt')) {
@@ -25,10 +25,10 @@ export async function getMovieDetails(imdbId: string): Promise<ImdbMovie> {
 
     // Check for API error message in response
     if (
-      response &&
-      typeof response === 'object' &&
-      'errorMessage' in response &&
-      response.errorMessage
+      response
+      && typeof response === 'object'
+      && 'errorMessage' in response
+      && response.errorMessage
     ) {
       throw new ApiError(
         String(response.errorMessage),
@@ -73,10 +73,10 @@ export async function getMovieDetails(imdbId: string): Promise<ImdbMovie> {
  * @param imdbIds - Array of IMDb IDs
  * @returns Promise with array of movie details (null for failed requests)
  */
-export async function getMultipleMovieDetails(
+export async function getMultipleMovieDetails (
   imdbIds: string[],
 ): Promise<Array<ImdbMovie | null>> {
-  const requests = imdbIds.map(async (id) => {
+  const requests = imdbIds.map(async id => {
     try {
       return await getMovieDetails(id)
     } catch {
@@ -86,4 +86,3 @@ export async function getMultipleMovieDetails(
 
   return Promise.all(requests)
 }
-

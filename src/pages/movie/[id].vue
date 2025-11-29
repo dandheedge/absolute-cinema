@@ -2,16 +2,16 @@
   <div class="movie-detail-page">
     <!-- Back Button -->
     <v-btn
-      variant="text"
-      prepend-icon="mdi-arrow-left"
       class="mb-4"
+      prepend-icon="mdi-arrow-left"
+      variant="text"
       @click="goBack"
     >
       Back
     </v-btn>
 
     <!-- Loading State -->
-    <LoadingState v-if="movieDetailsStore.loading" type="detail" message="Loading movie details..." />
+    <LoadingState v-if="movieDetailsStore.loading" message="Loading movie details..." type="detail" />
 
     <!-- Error State -->
     <ErrorState
@@ -24,13 +24,13 @@
     <div v-else-if="movie" class="movie-detail">
       <v-row>
         <!-- Poster -->
-        <v-col cols="12" md="4" lg="3">
+        <v-col cols="12" lg="3" md="4">
           <v-img
-            :src="moviePoster"
             :alt="movie.title"
             aspect-ratio="2/3"
-            cover
             class="movie-detail__poster"
+            cover
+            :src="moviePoster"
           >
             <template #placeholder>
               <v-skeleton-loader type="image" />
@@ -40,11 +40,11 @@
           <!-- Favorite Button -->
           <v-btn
             block
+            class="mt-4"
             :color="isFavorite ? 'red' : 'primary'"
-            :variant="isFavorite ? 'elevated' : 'outlined'"
             :prepend-icon="isFavorite ? 'mdi-heart' : 'mdi-heart-outline'"
             size="large"
-            class="mt-4"
+            :variant="isFavorite ? 'elevated' : 'outlined'"
             @click="handleToggleFavorite"
           >
             {{ isFavorite ? 'Remove from Favorites' : 'Add to Favorites' }}
@@ -52,18 +52,18 @@
         </v-col>
 
         <!-- Info -->
-        <v-col cols="12" md="8" lg="9">
+        <v-col cols="12" lg="9" md="8">
           <div class="movie-detail__info">
             <!-- Title -->
             <h1 class="text-h3 mb-2">{{ movie.title }}</h1>
 
             <!-- Meta Info -->
             <div class="movie-detail__meta">
-              <v-chip v-if="movie.year" size="small" class="mr-2">
+              <v-chip v-if="movie.year" class="mr-2" size="small">
                 {{ movie.year }}
               </v-chip>
-              <v-chip v-if="movie.runtimeStr" size="small" class="mr-2">
-                <v-icon start size="small">mdi-clock-outline</v-icon>
+              <v-chip v-if="movie.runtimeStr" class="mr-2" size="small">
+                <v-icon size="small" start>mdi-clock-outline</v-icon>
                 {{ movie.runtimeStr }}
               </v-chip>
               <v-chip v-if="movie.contentRating" size="small">
@@ -97,9 +97,9 @@
               <v-chip
                 v-for="genre in movie.genreList"
                 :key="genre.key"
+                class="mr-2 mb-2"
                 size="small"
                 variant="outlined"
-                class="mr-2 mb-2"
               >
                 {{ genre.value }}
               </v-chip>
@@ -134,25 +134,25 @@
 
             <div class="movie-detail__additional">
               <v-row>
-                <v-col v-if="movie.countries" cols="12" sm="6" md="4">
+                <v-col v-if="movie.countries" cols="12" md="4" sm="6">
                   <div class="info-item">
                     <span class="info-item__label">Country</span>
                     <span class="info-item__value">{{ movie.countries }}</span>
                   </div>
                 </v-col>
-                <v-col v-if="movie.languages" cols="12" sm="6" md="4">
+                <v-col v-if="movie.languages" cols="12" md="4" sm="6">
                   <div class="info-item">
                     <span class="info-item__label">Language</span>
                     <span class="info-item__value">{{ movie.languages }}</span>
                   </div>
                 </v-col>
-                <v-col v-if="movie.releaseDate" cols="12" sm="6" md="4">
+                <v-col v-if="movie.releaseDate" cols="12" md="4" sm="6">
                   <div class="info-item">
                     <span class="info-item__label">Release Date</span>
                     <span class="info-item__value">{{ formatDate(movie.releaseDate) }}</span>
                   </div>
                 </v-col>
-                <v-col v-if="movie.boxOffice?.grossUSA" cols="12" sm="6" md="4">
+                <v-col v-if="movie.boxOffice?.grossUSA" cols="12" md="4" sm="6">
                   <div class="info-item">
                     <span class="info-item__label">Box Office (USA)</span>
                     <span class="info-item__value">{{ movie.boxOffice.grossUSA }}</span>
@@ -174,95 +174,95 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useMovieDetailsStore } from '@/stores/movieDetails'
-import { useFavoritesStore } from '@/stores/favorites'
-import { PLACEHOLDER_IMAGE } from '@/utils/constants'
+  import { computed, onMounted } from 'vue'
+  import { useRoute, useRouter } from 'vue-router'
+  import { useFavoritesStore } from '@/stores/favorites'
+  import { useMovieDetailsStore } from '@/stores/movieDetails'
+  import { PLACEHOLDER_IMAGE } from '@/utils/constants'
 
-const route = useRoute()
-const router = useRouter()
-const movieDetailsStore = useMovieDetailsStore()
-const favoritesStore = useFavoritesStore()
+  const route = useRoute()
+  const router = useRouter()
+  const movieDetailsStore = useMovieDetailsStore()
+  const favoritesStore = useFavoritesStore()
 
-const movie = computed(() => movieDetailsStore.currentMovie)
+  const movie = computed(() => movieDetailsStore.currentMovie)
 
-const moviePoster = computed(() => {
-  return movie.value?.image || PLACEHOLDER_IMAGE
-})
+  const moviePoster = computed(() => {
+    return movie.value?.image || PLACEHOLDER_IMAGE
+  })
 
-const isFavorite = computed(() => {
-  if (!movie.value || !('id' in movie.value)) return false
-  return favoritesStore.isFavorite(movie.value.id)
-})
+  const isFavorite = computed(() => {
+    if (!movie.value || !('id' in movie.value)) return false
+    return favoritesStore.isFavorite(movie.value.id)
+  })
 
-onMounted(async () => {
-  const params = route.params as { id?: string | string[] }
-  const imdbId = typeof params.id === 'string' ? params.id : Array.isArray(params.id) ? params.id[0] : ''
-  
-  if (!imdbId) {
-    router.push('/')
-    return
-  }
+  onMounted(async () => {
+    const params = route.params as { id?: string | string[] }
+    const imdbId = typeof params.id === 'string' ? params.id : (Array.isArray(params.id) ? params.id[0] : '')
 
-  try {
-    await movieDetailsStore.fetchMovieDetails(imdbId)
-  } catch {
+    if (!imdbId) {
+      router.push('/')
+      return
+    }
+
+    try {
+      await movieDetailsStore.fetchMovieDetails(imdbId)
+    } catch {
     // Error is handled by the store
+    }
+  })
+
+  function handleToggleFavorite () {
+    if (!movie.value || !('id' in movie.value)) return
+
+    // Create a MovieSearchResult object for the favorites store
+    const movieData = {
+      Title: movie.value.title,
+      Year: Number.parseInt(movie.value.year) || 0,
+      imdbID: movie.value.id,
+    }
+
+    favoritesStore.toggleFavorite(movieData)
   }
-})
 
-function handleToggleFavorite() {
-  if (!movie.value || !('id' in movie.value)) return
-
-  // Create a MovieSearchResult object for the favorites store
-  const movieData = {
-    Title: movie.value.title,
-    Year: parseInt(movie.value.year) || 0,
-    imdbID: movie.value.id,
+  function goBack () {
+    if (window.history.length > 2) {
+      router.back()
+    } else {
+      router.push('/')
+    }
   }
 
-  favoritesStore.toggleFavorite(movieData)
-}
-
-function goBack() {
-  if (window.history.length > 2) {
-    router.back()
-  } else {
-    router.push('/')
+  function handleRetry () {
+    const params = route.params as { id?: string | string[] }
+    const imdbId = typeof params.id === 'string' ? params.id : (Array.isArray(params.id) ? params.id[0] : '')
+    if (imdbId) {
+      movieDetailsStore.fetchMovieDetails(imdbId, true)
+    }
   }
-}
 
-function handleRetry() {
-  const params = route.params as { id?: string | string[] }
-  const imdbId = typeof params.id === 'string' ? params.id : Array.isArray(params.id) ? params.id[0] : ''
-  if (imdbId) {
-    movieDetailsStore.fetchMovieDetails(imdbId, true)
+  function formatVotes (votes: string): string {
+    const num = Number.parseInt(votes.replace(/,/g, ''))
+    if (num >= 1_000_000) {
+      return `${(num / 1_000_000).toFixed(1)}M`
+    } else if (num >= 1000) {
+      return `${(num / 1000).toFixed(1)}K`
+    }
+    return votes
   }
-}
 
-function formatVotes(votes: string): string {
-  const num = parseInt(votes.replace(/,/g, ''))
-  if (num >= 1000000) {
-    return `${(num / 1000000).toFixed(1)}M`
-  } else if (num >= 1000) {
-    return `${(num / 1000).toFixed(1)}K`
+  function formatDate (dateString: string): string {
+    try {
+      const date = new Date(dateString)
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+    } catch {
+      return dateString
+    }
   }
-  return votes
-}
-
-function formatDate(dateString: string): string {
-  try {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    })
-  } catch {
-    return dateString
-  }
-}
 </script>
 
 <style scoped lang="scss">
@@ -348,4 +348,3 @@ function formatDate(dateString: string): string {
   }
 }
 </style>
-

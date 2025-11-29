@@ -3,7 +3,7 @@
  * Global test configuration and utilities
  */
 
-import { beforeEach, afterEach, vi } from 'vitest'
+import { afterEach, beforeEach, vi } from 'vitest'
 
 // Mock localStorage
 const localStorageMock = (() => {
@@ -36,4 +36,3 @@ beforeEach(() => {
 afterEach(() => {
   vi.clearAllMocks()
 })
-

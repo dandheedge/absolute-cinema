@@ -6,7 +6,7 @@
 export const API_CONFIG = {
   MOVIES_BASE_URL: 'https://jsonmock.hackerrank.com/api',
   IMDB_BASE_URL: 'https://api.imdbapi.dev',
-  REQUEST_TIMEOUT: 10000,
+  REQUEST_TIMEOUT: 10_000,
   RETRY_LIMIT: 2,
 } as const
 
@@ -63,4 +63,3 @@ export const MESSAGES = {
 
 // Images
 export const PLACEHOLDER_IMAGE = 'https://placehold.co/300x450'
-

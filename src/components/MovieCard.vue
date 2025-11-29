@@ -1,17 +1,17 @@
 <template>
   <v-card
     class="movie-card"
-    :to="`/movie/${movie.imdbID}`"
     elevation="2"
     hover
+    :to="`/movie/${movie.imdbID}`"
   >
     <div class="movie-card__image-wrapper">
       <v-img
-        :src="movieImage"
         :alt="movie.Title"
         aspect-ratio="2/3"
-        cover
         class="movie-card__image"
+        cover
+        :src="movieImage"
       >
         <template #placeholder>
           <v-skeleton-loader type="image" />
@@ -19,11 +19,11 @@
       </v-img>
 
       <v-btn
-        :icon="isFavorite ? 'mdi-heart' : 'mdi-heart-outline'"
-        :color="isFavorite ? 'red' : 'white'"
         class="movie-card__favorite-btn"
-        size="small"
+        :color="isFavorite ? 'red' : 'white'"
         elevation="2"
+        :icon="isFavorite ? 'mdi-heart' : 'mdi-heart-outline'"
+        size="small"
         @click.prevent="handleToggleFavorite"
       />
     </div>
@@ -39,29 +39,29 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { MovieSearchResult } from '@/api/types'
-import { useFavoritesStore } from '@/stores/favorites'
-import { PLACEHOLDER_IMAGE } from '@/utils/constants'
+  import type { MovieSearchResult } from '@/api/types'
+  import { computed } from 'vue'
+  import { useFavoritesStore } from '@/stores/favorites'
+  import { PLACEHOLDER_IMAGE } from '@/utils/constants'
 
-interface Props {
-  movie: MovieSearchResult
-  imageUrl?: string
-}
+  interface Props {
+    movie: MovieSearchResult
+    imageUrl?: string
+  }
 
-const props = defineProps<Props>()
+  const props = defineProps<Props>()
 
-const favoritesStore = useFavoritesStore()
+  const favoritesStore = useFavoritesStore()
 
-const isFavorite = computed(() => favoritesStore.isFavorite(props.movie.imdbID))
+  const isFavorite = computed(() => favoritesStore.isFavorite(props.movie.imdbID))
 
-const movieImage = computed(() => {
-  return props.imageUrl || PLACEHOLDER_IMAGE
-})
+  const movieImage = computed(() => {
+    return props.imageUrl || PLACEHOLDER_IMAGE
+  })
 
-function handleToggleFavorite() {
-  favoritesStore.toggleFavorite(props.movie)
-}
+  function handleToggleFavorite () {
+    favoritesStore.toggleFavorite(props.movie)
+  }
 </script>
 
 <style scoped lang="scss">
@@ -104,4 +104,3 @@ function handleToggleFavorite() {
   }
 }
 </style>
-

@@ -1,6 +1,6 @@
 <template>
   <div class="error-state">
-    <v-icon :size="iconSize" color="error" class="error-state__icon">
+    <v-icon class="error-state__icon" color="error" :size="iconSize">
       mdi-alert-circle-outline
     </v-icon>
 
@@ -11,8 +11,8 @@
     <v-btn
       v-if="showRetry"
       color="primary"
-      variant="elevated"
       prepend-icon="mdi-refresh"
+      variant="elevated"
       @click="$emit('retry')"
     >
       {{ retryText }}
@@ -21,29 +21,29 @@
 </template>
 
 <script setup lang="ts">
-import { MESSAGES } from '@/utils/constants'
+  import { MESSAGES } from '@/utils/constants'
 
-interface Props {
-  title?: string
-  message?: string
-  showRetry?: boolean
-  retryText?: string
-  iconSize?: number
-}
+  interface Props {
+    title?: string
+    message?: string
+    showRetry?: boolean
+    retryText?: string
+    iconSize?: number
+  }
 
-interface Emits {
-  (e: 'retry'): void
-}
+  interface Emits {
+    (e: 'retry'): void
+  }
 
-withDefaults(defineProps<Props>(), {
-  title: 'Something went wrong',
-  message: MESSAGES.NETWORK_ERROR,
-  showRetry: true,
-  retryText: MESSAGES.RETRY,
-  iconSize: 64,
-})
+  withDefaults(defineProps<Props>(), {
+    title: 'Something went wrong',
+    message: MESSAGES.NETWORK_ERROR,
+    showRetry: true,
+    retryText: MESSAGES.RETRY,
+    iconSize: 64,
+  })
 
-defineEmits<Emits>()
+  defineEmits<Emits>()
 </script>
 
 <style scoped lang="scss">
@@ -74,4 +74,3 @@ defineEmits<Emits>()
   }
 }
 </style>
-

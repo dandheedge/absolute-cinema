@@ -2,10 +2,10 @@
  * Filters Store Tests
  */
 
-import { describe, it, expect, beforeEach } from 'vitest'
-import { setActivePinia, createPinia } from 'pinia'
-import { useFiltersStore } from '../filters'
+import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { FILTERS } from '@/utils/constants'
+import { useFiltersStore } from '../filters'
 
 describe('Filters Store', () => {
   beforeEach(() => {
@@ -157,4 +157,3 @@ describe('Filters Store', () => {
     expect(store.yearRange[1]).toBeLessThanOrEqual(FILTERS.MAX_YEAR)
   })
 })
-

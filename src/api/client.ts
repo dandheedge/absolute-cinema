@@ -8,7 +8,7 @@ import ky from 'ky'
 // HackerRank Movies API client
 export const moviesApiClient = ky.create({
   prefixUrl: 'https://jsonmock.hackerrank.com/api',
-  timeout: 10000,
+  timeout: 10_000,
   retry: {
     limit: 2,
     methods: ['get'],
@@ -16,7 +16,7 @@ export const moviesApiClient = ky.create({
   },
   hooks: {
     beforeError: [
-      (error) => {
+      error => {
         const { response } = error
         if (response) {
           error.message = `Request failed with status ${response.status}: ${response.statusText}`
@@ -30,7 +30,7 @@ export const moviesApiClient = ky.create({
 // IMDb API client
 export const imdbApiClient = ky.create({
   prefixUrl: 'https://api.imdbapi.dev',
-  timeout: 10000,
+  timeout: 10_000,
   retry: {
     limit: 2,
     methods: ['get'],
@@ -38,7 +38,7 @@ export const imdbApiClient = ky.create({
   },
   hooks: {
     beforeError: [
-      (error) => {
+      error => {
         const { response } = error
         if (response) {
           error.message = `Request failed with status ${response.status}: ${response.statusText}`
@@ -48,4 +48,3 @@ export const imdbApiClient = ky.create({
     ],
   },
 })
-

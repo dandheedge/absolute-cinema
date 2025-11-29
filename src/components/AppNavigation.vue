@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar elevation="2" color="primary">
+  <v-app-bar color="primary" elevation="2">
     <v-app-bar-title class="app-navigation__title" @click="goHome">
       <v-icon class="app-navigation__icon">mdi-movie-open</v-icon>
       <span>Absolute Cinema</span>
@@ -8,22 +8,22 @@
     <v-spacer />
 
     <v-btn
+      prepend-icon="mdi-magnify"
       :to="ROUTES.HOME"
       variant="text"
-      prepend-icon="mdi-magnify"
     >
       Search
     </v-btn>
 
     <v-btn
+      class="app-navigation__favorites-btn"
       :to="ROUTES.FAVORITES"
       variant="text"
-      class="app-navigation__favorites-btn"
     >
       <v-badge
         v-if="favoriteCount > 0"
-        :content="favoriteCount"
         color="red"
+        :content="favoriteCount"
       >
         <v-icon>mdi-heart</v-icon>
       </v-badge>
@@ -34,19 +34,19 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRouter } from 'vue-router'
-import { useFavoritesStore } from '@/stores/favorites'
-import { ROUTES } from '@/utils/constants'
+  import { computed } from 'vue'
+  import { useRouter } from 'vue-router'
+  import { useFavoritesStore } from '@/stores/favorites'
+  import { ROUTES } from '@/utils/constants'
 
-const router = useRouter()
-const favoritesStore = useFavoritesStore()
+  const router = useRouter()
+  const favoritesStore = useFavoritesStore()
 
-const favoriteCount = computed(() => favoritesStore.favoriteCount)
+  const favoriteCount = computed(() => favoritesStore.favoriteCount)
 
-function goHome() {
-  router.push(ROUTES.HOME)
-}
+  function goHome () {
+    router.push(ROUTES.HOME)
+  }
 </script>
 
 <style scoped lang="scss">
@@ -74,4 +74,3 @@ function goHome() {
   }
 }
 </style>
-

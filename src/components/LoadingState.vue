@@ -5,9 +5,9 @@
         v-for="n in count"
         :key="n"
         cols="12"
-        sm="6"
-        md="4"
         lg="3"
+        md="4"
+        sm="6"
       >
         <v-skeleton-loader type="card" />
       </v-col>
@@ -24,26 +24,26 @@
     </div>
 
     <div v-else class="loading-state__center">
-      <v-progress-circular indeterminate color="primary" :size="size" />
+      <v-progress-circular color="primary" indeterminate :size="size" />
       <p v-if="message" class="loading-state__message">{{ message }}</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-interface Props {
-  type?: 'grid' | 'detail' | 'list' | 'spinner'
-  count?: number
-  message?: string
-  size?: number
-}
+  interface Props {
+    type?: 'grid' | 'detail' | 'list' | 'spinner'
+    count?: number
+    message?: string
+    size?: number
+  }
 
-withDefaults(defineProps<Props>(), {
-  type: 'spinner',
-  count: 8,
-  message: '',
-  size: 64,
-})
+  withDefaults(defineProps<Props>(), {
+    type: 'spinner',
+    count: 8,
+    message: '',
+    size: 64,
+  })
 </script>
 
 <style scoped lang="scss">
@@ -71,4 +71,3 @@ withDefaults(defineProps<Props>(), {
   }
 }
 </style>
-

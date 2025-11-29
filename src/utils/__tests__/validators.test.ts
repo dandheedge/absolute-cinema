@@ -2,16 +2,16 @@
  * Validators Tests
  */
 
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import {
-  sanitizeInput,
+  isNonEmptyString,
   isValidImdbId,
-  isValidYear,
   isValidPage,
   isValidSearchQuery,
-  safeJsonParse,
-  isNonEmptyString,
   isValidSortOption,
+  isValidYear,
+  safeJsonParse,
+  sanitizeInput,
 } from '../validators'
 
 describe('Validators', () => {
@@ -136,4 +136,3 @@ describe('Validators', () => {
     })
   })
 })
-

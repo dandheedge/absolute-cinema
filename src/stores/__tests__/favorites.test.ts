@@ -2,10 +2,10 @@
  * Favorites Store Tests
  */
 
-import { describe, it, expect, beforeEach } from 'vitest'
-import { setActivePinia, createPinia } from 'pinia'
-import { useFavoritesStore } from '../favorites'
+import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { mockMovieSearchResult } from '@/tests/mocks/api'
+import { useFavoritesStore } from '../favorites'
 
 describe('Favorites Store', () => {
   beforeEach(() => {
@@ -49,7 +49,7 @@ describe('Favorites Store', () => {
 
   it('should toggle favorite status', () => {
     const store = useFavoritesStore()
-    
+
     // Add
     store.toggleFavorite(mockMovieSearchResult)
     expect(store.isFavorite(mockMovieSearchResult.imdbID)).toBe(true)
@@ -130,4 +130,3 @@ describe('Favorites Store', () => {
     expect(newStore.isFavorite(mockMovieSearchResult.imdbID)).toBe(true)
   })
 })
-

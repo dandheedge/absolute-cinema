@@ -3,9 +3,9 @@
  * Handles HackerRank Movies API requests
  */
 
+import type { MoviesApiResponse } from './types'
 import { HTTPError } from 'ky'
 import { moviesApiClient } from './client'
-import type { MoviesApiResponse } from './types'
 import { ApiError, isMoviesApiResponse } from './types'
 
 export interface SearchMoviesParams {
@@ -19,7 +19,7 @@ export interface SearchMoviesParams {
  * @returns Promise with movies search results
  * @throws ApiError if request fails or response is invalid
  */
-export async function searchMovies(
+export async function searchMovies (
   params: SearchMoviesParams,
 ): Promise<MoviesApiResponse> {
   try {
@@ -68,7 +68,6 @@ export async function searchMovies(
  * @param page - Page number
  * @returns Promise with movies search results
  */
-export async function getAllMovies(page = 1): Promise<MoviesApiResponse> {
+export async function getAllMovies (page = 1): Promise<MoviesApiResponse> {
   return searchMovies({ title: '', page })
 }
-

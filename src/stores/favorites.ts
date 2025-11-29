@@ -3,14 +3,16 @@
  * Manages user's favorite movies with localStorage persistence
  */
 
-import { defineStore } from 'pinia'
-import { computed } from 'vue'
 import type { MovieSearchResult } from '@/api/types'
 import { useLocalStorage } from '@vueuse/core'
+import { defineStore } from 'pinia'
+import { computed } from 'vue'
 import { STORAGE_KEYS } from '@/utils/constants'
 
+type ExtraMovieField = string | number | boolean | null
 export interface FavoriteMovie extends MovieSearchResult {
-  addedAt: number // timestamp
+  [key: string]: ExtraMovieField
+  addedAt: number
 }
 
 export const useFavoritesStore = defineStore('favorites', () => {
@@ -21,16 +23,18 @@ export const useFavoritesStore = defineStore('favorites', () => {
   const favoriteCount = computed(() => favorites.value.length)
   const hasFavorites = computed(() => favorites.value.length > 0)
   const favoriteIds = computed(() =>
-    new Set(favorites.value.map((f) => f.imdbID)),
+    new Set(favorites.value.map(f => f.imdbID)),
   )
 
   // Actions
-  function isFavorite(imdbId: string): boolean {
+  function isFavorite (imdbId: string): boolean {
     return favoriteIds.value.has(imdbId)
   }
 
-  function addFavorite(movie: MovieSearchResult) {
-    if (isFavorite(movie.imdbID)) return
+  function addFavorite (movie: MovieSearchResult) {
+    if (isFavorite(movie.imdbID)) {
+      return
+    }
 
     const favoriteMovie: FavoriteMovie = {
       ...movie,
@@ -40,11 +44,11 @@ export const useFavoritesStore = defineStore('favorites', () => {
     favorites.value = [favoriteMovie, ...favorites.value]
   }
 
-  function removeFavorite(imdbId: string) {
-    favorites.value = favorites.value.filter((f) => f.imdbID !== imdbId)
+  function removeFavorite (imdbId: string) {
+    favorites.value = favorites.value.filter(f => f.imdbID !== imdbId)
   }
 
-  function toggleFavorite(movie: MovieSearchResult) {
+  function toggleFavorite (movie: MovieSearchResult) {
     if (isFavorite(movie.imdbID)) {
       removeFavorite(movie.imdbID)
     } else {
@@ -52,35 +56,38 @@ export const useFavoritesStore = defineStore('favorites', () => {
     }
   }
 
-  function clearFavorites() {
+  function clearFavorites () {
     favorites.value = []
   }
 
-  function getFavorite(imdbId: string): FavoriteMovie | undefined {
-    return favorites.value.find((f) => f.imdbID === imdbId)
+  function getFavorite (imdbId: string): FavoriteMovie | undefined {
+    return favorites.value.find(f => f.imdbID === imdbId)
   }
 
-  function getFavoritesByYear(year: number): FavoriteMovie[] {
-    return favorites.value.filter((f) => f.Year === year)
+  function getFavoritesByYear (year: number): FavoriteMovie[] {
+    return favorites.value.filter(f => f.Year === year)
   }
 
-  function getFavoritesSorted(
+  function getFavoritesSorted (
     sortBy: 'title' | 'year' | 'addedAt',
     order: 'asc' | 'desc' = 'asc',
   ): FavoriteMovie[] {
-    const sorted = [...favorites.value].sort((a, b) => {
+    const sorted = [...favorites.value].toSorted((a, b) => {
       let comparison = 0
 
       switch (sortBy) {
-        case 'title':
+        case 'title': {
           comparison = a.Title.localeCompare(b.Title)
           break
-        case 'year':
+        }
+        case 'year': {
           comparison = a.Year - b.Year
           break
-        case 'addedAt':
+        }
+        case 'addedAt': {
           comparison = a.addedAt - b.addedAt
           break
+        }
       }
 
       return order === 'asc' ? comparison : -comparison
@@ -109,4 +116,3 @@ export const useFavoritesStore = defineStore('favorites', () => {
     getFavoritesSorted,
   }
 })
-
