@@ -11,6 +11,7 @@
         aspect-ratio="2/3"
         class="movie-card__image"
         cover
+        :height="imageHeight"
         :src="movieImage"
       >
         <template #placeholder>
@@ -41,6 +42,7 @@
 <script setup lang="ts">
   import type { MovieSearchResult } from '@/api/types'
   import { computed } from 'vue'
+  import { useDisplay } from 'vuetify'
   import { useFavoritesStore } from '@/stores/favorites'
   import { PLACEHOLDER_IMAGE } from '@/utils/constants'
 
@@ -50,6 +52,7 @@
   }
 
   const props = defineProps<Props>()
+  const { mdAndUp, lgAndUp, xlAndUp } = useDisplay()
 
   const favoritesStore = useFavoritesStore()
 
@@ -57,6 +60,14 @@
 
   const movieImage = computed(() => {
     return props.imageUrl || PLACEHOLDER_IMAGE
+  })
+
+  // Responsive image heights for consistent card layout
+  const imageHeight = computed(() => {
+    if (xlAndUp.value) return 240  // xl: 3 columns per row
+    if (lgAndUp.value) return 220  // lg: 4 columns per row
+    if (mdAndUp.value) return 280  // md: 6 columns per row (2 per row)
+    return 150  // sm/xs: smaller screens
   })
 
   function handleToggleFavorite () {
@@ -68,6 +79,9 @@
 .movie-card {
   position: relative;
   transition: transform 0.2s ease-in-out;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 
   &:hover {
     transform: translateY(-4px);
@@ -75,6 +89,7 @@
 
   &__image-wrapper {
     position: relative;
+    flex-shrink: 0;
   }
 
   &__image {
@@ -95,8 +110,10 @@
     word-break: break-word;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    min-height: 2.6rem;
   }
 
   &__year {
